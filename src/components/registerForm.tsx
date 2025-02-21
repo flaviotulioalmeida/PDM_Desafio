@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import {
   View,
@@ -13,9 +15,15 @@ import {
   registerSchema,
   type RegisterFormData,
 } from "../schemas/register_schema";
+import { useNavigation } from "@react-navigation/native";
 
-export default function RegisterForm() {
+type Props = {
+  onSubmit: (data: RegisterFormData) => void;
+};
+
+export default function RegisterForm({ onSubmit }: Props) {
   const [showPassword, setShowPassword] = useState(false);
+  const navigation = useNavigation();
 
   const {
     control,
@@ -25,14 +33,12 @@ export default function RegisterForm() {
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = (data: RegisterFormData) => {
-    // Handle form submission here
-    console.log(data);
-  };
-
   return (
     <View style={styles.formContainer}>
-      <TouchableOpacity style={styles.backArrow}>
+      <TouchableOpacity
+        style={styles.backArrow}
+        onPress={() => navigation.goBack()}
+      >
         <Feather name="arrow-left" size={24} color="#FF8C00" />
       </TouchableOpacity>
 
@@ -90,13 +96,13 @@ export default function RegisterForm() {
         </View>
 
         <View style={styles.formGroup}>
-          <View style={styles.passwordGroup}>
+          <View style={styles.passwordContainer}>
             <Controller
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   style={[
-                    styles.formInput,
+                    styles.passwordInput,
                     errors.password && styles.inputError,
                   ]}
                   onBlur={onBlur}
@@ -128,7 +134,13 @@ export default function RegisterForm() {
 
       <View style={styles.loginLink}>
         <Text style={styles.loginText}>
-          Já tem cadastro? <Text style={styles.loginLinkText}>Fazer Login</Text>
+          Já tem cadastro?{" "}
+          <Text
+            style={styles.loginLinkText}
+            onPress={() => navigation.navigate("Login" as never)}
+          >
+            Fazer Login
+          </Text>
         </Text>
       </View>
     </View>
@@ -138,8 +150,8 @@ export default function RegisterForm() {
 const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
+    backgroundColor: "#fff",
     padding: 20,
-    backgroundColor: "white",
   },
   backArrow: {
     marginBottom: 32,
@@ -151,16 +163,17 @@ const styles = StyleSheet.create({
   logoText: {
     fontSize: 24,
     fontWeight: "bold",
+    color: "#333",
   },
   dot: {
     color: "#FF8C00",
-    marginHorizontal: 2,
   },
   formHeader: {
     alignItems: "center",
     marginBottom: 32,
   },
   headerText: {
+    fontSize: 16,
     color: "#333",
     lineHeight: 24,
   },
@@ -175,6 +188,24 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 16,
     fontSize: 16,
+    color: "#333",
+  },
+  passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F5F5F5",
+    borderRadius: 8,
+  },
+  passwordInput: {
+    flex: 1,
+    backgroundColor: "transparent",
+    borderRadius: 8,
+    padding: 16,
+    fontSize: 16,
+    color: "#333",
+  },
+  passwordToggle: {
+    padding: 16,
   },
   inputError: {
     backgroundColor: "#FFF0F0",
@@ -186,19 +217,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 4,
   },
-  passwordGroup: {
-    position: "relative",
-  },
-  passwordToggle: {
-    position: "absolute",
-    right: 16,
-    top: 16,
-  },
   loginLink: {
     alignItems: "center",
   },
   loginText: {
     color: "#333",
+    fontSize: 14,
   },
   loginLinkText: {
     color: "#FF8C00",
