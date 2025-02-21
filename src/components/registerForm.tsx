@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import {
   View,
@@ -16,6 +14,7 @@ import {
   type RegisterFormData,
 } from "../schemas/register_schema";
 import { useNavigation } from "@react-navigation/native";
+import ButtonSolid from "./Button/index";
 
 type Props = {
   onSubmit: (data: RegisterFormData) => void;
@@ -131,6 +130,12 @@ export default function RegisterForm({ onSubmit }: Props) {
           )}
         </View>
       </View>
+
+      <ButtonSolid
+        title="Cadastrar"
+        onPress={handleSubmit(onSubmit)}
+        color="#FF8C00"
+      />
 
       <View style={styles.loginLink}>
         <Text style={styles.loginText}>
