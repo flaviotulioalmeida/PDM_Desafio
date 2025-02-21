@@ -5,12 +5,21 @@ type ButtonProps = {
   title: string;
   onPress: () => void;
   color?: string;
+  outlined?: boolean; // Nova propriedade para definir o estilo do botão
 };
 
-const ButtonSolid: React.FC<ButtonProps> = ({ title, onPress, color = '#4CAF50' }) => {
+const ButtonSolid: React.FC<ButtonProps> = ({ title, onPress, color = '#4CAF50', outlined = false }) => {
   return (
-    <TouchableOpacity style={[styles.button, { backgroundColor: color }]} onPress={onPress}>
-      <Text style={styles.text}>{title}</Text>
+    <TouchableOpacity
+      style={[
+        styles.button,
+        outlined
+          ? { backgroundColor: 'white', borderColor: color, borderWidth: 2 }
+          : { backgroundColor: color },
+      ]}
+      onPress={onPress}
+    >
+      <Text style={[styles.text, outlined ? { color: color } : { color: 'white' }]}>{title}</Text>
     </TouchableOpacity>
   );
 };
@@ -25,7 +34,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   text: {
-    color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
   },
